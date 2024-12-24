@@ -1,9 +1,12 @@
 package frc.robot.subsystems.swerve;
 
 import java.util.Map;
+import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,9 +14,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.swerve.FODC;
-import frc.robot.commands.swerve.GenericDrivetrain;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
@@ -30,7 +33,7 @@ public class SwerveSubsystem extends SubsystemABS {
     private final Pigeon2 pigeonIMU;
     private CommandXboxController driverController;
     public CommandSwerveDrivetrain drivetrain;
-    private double robotFacingAngle;
+    private Double robotFacingAngle;
     private SimpleWidget robotSpeedWidget;
     private FieldMap fieldMap;
     private PIDController rPidController;
@@ -47,15 +50,30 @@ public class SwerveSubsystem extends SubsystemABS {
         this.drivetrain = DrivetrainConstants.drivetrain;
         this.fieldMap = new FieldMap();
         printcontroller();
+
+        RobotConfig config;
+        try {
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+        }
+
+        
+
     }
+
+    
+
 
     @Override
     public void init() {
+        robotFacingAngle =  0.0;
         rPidController = new PIDController(SwerveConstants.kRotationP, SwerveConstants.kRotationI, SwerveConstants.kRotationD);
-
+        rPidController.setTolerance(SwerveConstants.kRotationTolerance);
         tab = getTab();
         
-        tab.add("Gyro",  robotFacingAngle)
+        tab.addNumber("Gyro", () -> robotFacingAngle)
                 .withWidget(BuiltInWidgets.kGyro) // Use Gyro widget
                 .withProperties(Map.of("startingAngle", 0, "majorTickSpacing", 45)) // Customize properties
                 .withPosition(3, 0)
@@ -72,12 +90,14 @@ public class SwerveSubsystem extends SubsystemABS {
 
     @Override
     public void periodic() {
+        robotFacingAngle = drivetrain.getState().Pose.getRotation().getDegrees();
     
     }
 
     @Override
 public void simulationPeriodic() {
-    
+    robotFacingAngle =  drivetrain.getState().Pose.getRotation().getDegrees();
+
 }
 
     public double applyDeadband(double value, double deadband) {
@@ -88,9 +108,10 @@ public void simulationPeriodic() {
             return drivetrain.getState().Pose.getRotation().getDegrees();
     }
 
-    @Override
-    public void setDefaultCommand() {
-        DrivetrainConstants.drivetrain.setDefaultCommand(new GenericDrivetrain(driverController));
+   @Override
+    public void setDefaultCmd() {
+        drivetrain.setDefaultCommand(null);
+
     }
 
     @Override
@@ -98,8 +119,22 @@ public void simulationPeriodic() {
         return true;
     }
 
-    public void setBetaDefaultCommand() {
-        DrivetrainConstants.drivetrain.setDefaultCommand(new FODC(driverController, this));
+    public void drive(double speed, double strafe, double rotation, boolean fieldCentric) {
+        if (fieldCentric) {
+            double angle = Math.toRadians(getRobotAngle());
+            double temp = speed * Math.cos(angle) + strafe * Math.sin(angle);
+            strafe = -speed * Math.sin(angle) + strafe * Math.cos(angle);
+            speed = temp;
+        }
+        drivetrain.setControl(DrivetrainConstants.drive
+        .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
+        .withVelocityX(speed * SafetyMap.kMaxSpeed)
+        .withVelocityY(strafe * SafetyMap.kMaxSpeed)
+        );
+    }
+
+    public Command setBetaCmd() {
+        return  new FODC(driverController, this);
     }
 
     public void stop() {
@@ -150,20 +185,32 @@ public void simulationPeriodic() {
         return rPidController.getSetpoint();
     }
 
+    public void setTolerance(double tolerance) {
+        rPidController.setTolerance(tolerance);
+    }
+
+
+
+
+
     public void setControl(double rotation, double strafe, double forward) {
         drivetrain.setControl(DrivetrainConstants.drive
-        .withRotationalRate(rotation)
-        .withVelocityX(forward)
-        .withVelocityY(strafe)
+        .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
+        .withVelocityX(forward * SafetyMap.kMaxSpeed)
+        .withVelocityY(strafe * SafetyMap.kMaxSpeed)
 
         );
     }
 
     public void setControl(double rotation, double strafe, double forward, double heading) {
         drivetrain.setControl(DrivetrainConstants.drive
-        .withRotationalRate(rotation)
-        .withVelocityX(forward)
-        .withVelocityY(strafe)
+        .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
+        .withVelocityX(forward* SafetyMap.kMaxSpeed)
+        .withVelocityY(strafe* SafetyMap.kMaxSpeed)
         );
+    }
+
+    public CommandSwerveDrivetrain getDrivetrain() {
+        return drivetrain;
     }
 }

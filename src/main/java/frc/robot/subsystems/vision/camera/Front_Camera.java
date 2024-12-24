@@ -108,8 +108,10 @@ public class Front_Camera extends VisionABC {
 
 
 	@Override
-	public void setDefaultCommand() {}	
-	
+	public void setDefaultCmd() {
+		// TODO Auto-generated method stub
+		
+	}	
 	@Override
 	public boolean isHealthy() {
 		return true;

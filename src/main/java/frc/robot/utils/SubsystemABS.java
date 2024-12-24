@@ -5,7 +5,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 public abstract class SubsystemABS extends SubsystemBase {
     protected Subsystems part;
     protected ShuffleboardTab tab;
@@ -61,7 +60,7 @@ public abstract class SubsystemABS extends SubsystemBase {
     @Override
     public abstract void simulationPeriodic();
 
-    public abstract void setDefaultCommand();
+    public abstract void setDefaultCmd();
 
     public abstract  boolean isHealthy();
 

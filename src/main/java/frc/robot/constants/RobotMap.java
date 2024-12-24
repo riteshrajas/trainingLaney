@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotMap {
 
     public static class SafetyMap {
-        public static final double kMaxSpeed = 5.0;
+        public static final double kMaxSpeed = 7.0;
         public static final double kMaxRotation = 1.0;
         public static final double kMaxAcceleration = 1.0;
         public static final double kAutonMoveSpeed = 1.0;
@@ -21,6 +21,7 @@ public class RobotMap {
             public static double kRotationI = .000;//.0001
             public static double kRotationD = .00;
             public static double speedpercentage = 1.0;
+            public static double kRotationTolerance = 1.0;
         }
 
         public static class FODC {

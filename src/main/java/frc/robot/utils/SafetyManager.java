@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,12 @@ public class SafetyManager extends SubsystemBase {
         for (SubsystemABS subsystem : subsystems) {
             subsystemWidgets.put(subsystem, safetyTab.add(subsystem.getName(), subsystem.isHealthy()));
         }
-
+        for (SubsystemABS subsystem : subsystemWidgets.keySet()) {
+            if (subsystem.isHealthy()) {
+                ElasticLib.Notification notification = new ElasticLib.Notification(ElasticLib.Notification.NotificationLevel.INFO, subsystem.getName(),  subsystem.getName()+" is healthy");
+                ElasticLib.sendNotification(notification);
+            }
+        }
     }
 
     public static void init() {
@@ -42,6 +46,7 @@ public class SafetyManager extends SubsystemBase {
         for (SubsystemABS subsystem : subsystemWidgets.keySet()) {
             if (!subsystem.isHealthy()) {
                 System.out.println(subsystem.getName() + " is not healthy" + " at " + System.currentTimeMillis());
+                
                 DriverStation.reportError(subsystem.getName() + " is not healthy", false);
                 subsystem.Failsafe();
             }
