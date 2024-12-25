@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.swerve.FODC;
@@ -32,6 +33,7 @@ public class RobotContainer {
     private SwerveSubsystem swerveSubsystem;
     private CommandXboxController driverController;
     private CommandXboxController operatorController;
+    private CommandPS5Controller driverController2;
     private SendableChooser<Command> autonChooser;
     private Telemetry telemetry;
 
@@ -40,6 +42,7 @@ public class RobotContainer {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
         operatorController = UsbMap.operatorController;
+        driverController2 = new CommandPS5Controller(2);
         
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE ,
@@ -56,13 +59,13 @@ public class RobotContainer {
         DrivetrainConstants.drivetrain.setDefaultCommand(
             new ParallelCommandGroup(
                     DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
-                            .withVelocityX(driverController.getLeftY() * SafetyMap.kMaxSpeed * SafetyMap.kMaxSpeedChange)
-                            .withVelocityY(driverController.getLeftX() * SafetyMap.kMaxSpeed * SafetyMap.kMaxSpeedChange)
-                            .withRotationalRate(-driverController.getRightX() * SafetyMap.kMaxAcceleration * SafetyMap.kAngularRateMultiplier)))
+                            .withVelocityX(driverController2.getLeftY() * SafetyMap.kMaxSpeed * SafetyMap.kMaxSpeedChange)
+                            .withVelocityY(driverController2.getLeftX() * SafetyMap.kMaxSpeed * SafetyMap.kMaxSpeedChange)
+                            .withRotationalRate(-driverController2.getRightX() * SafetyMap.kMaxAcceleration * SafetyMap.kAngularRateMultiplier)))
         );
 
-        autonChooser = new SendableChooser<Command>();
-
+        // autonChooser = new SendableChooser<Command>();
+        autonChooser = AutoBuilder.buildAutoChooser();
         setupNamedCommands();
         setupPaths();
         configureBindings();

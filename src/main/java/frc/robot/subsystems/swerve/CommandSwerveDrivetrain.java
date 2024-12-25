@@ -37,6 +37,10 @@ import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
  */
 @SuppressWarnings("unused")
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+
+
+    RobotConfig config;
+    
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -186,7 +190,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public void configureAutoBuilder() {
         try {
-            var config = RobotConfig.fromGUISettings();
+         config = RobotConfig.fromGUISettings();
+        } catch(Exception exc){
+            DriverStation.reportError("Failed to get robot config settings", exc.getStackTrace());
+        }
+        try {
+            
             AutoBuilder.configure(
                 () -> getState().Pose,   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
