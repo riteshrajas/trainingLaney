@@ -13,7 +13,7 @@ public class RobotMap {
         public static final double kMaxAngularRate = Math.PI; // 3/4 of a rotation per second max angular velocity
 	    public static final double kAngularRateMultiplier = 4;
         public static final double kJoystickDeadband = 0.1;
-        public static  double kMaxSpeedChange = 1;
+        public static double kMaxSpeedChange = 1;
         public static double kFollowerCommand = 6;
 
         public static class SwerveConstants {
