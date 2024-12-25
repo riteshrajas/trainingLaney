@@ -42,5 +42,6 @@ We're thrilled to share our comprehensive template for the 2025 FRC season! This
 - WPILib 2025.1.1-beta-3
 - Java 17
 - Elastic Dashboard
+- Pathplanner 2025 beta-3++
 
 We hope this template helps teams jumpstart their 2025 season development. Feel free to contribute or raise issues if you find areas for improvement!
