@@ -64,7 +64,7 @@ public class FODC extends Command {
         // Calculate turn power based on angle difference
         double turnPower = 1.5 * calculateTurnPower(angleDiff);
          new ParallelCommandGroup(
-                subsystem.getDrivetrain().applyRequest(() -> DrivetrainConstants.drive
+                DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
                             .withVelocityX(rightStickX * SafetyMap.kMaxSpeed * SafetyMap.kMaxSpeedChange)
                             .withVelocityY(rightStickX * SafetyMap.kMaxSpeed * SafetyMap.kMaxSpeedChange)
                             .withRotationalRate(turnPower * SafetyMap.kMaxAcceleration * SafetyMap.kAngularRateMultiplier)));
