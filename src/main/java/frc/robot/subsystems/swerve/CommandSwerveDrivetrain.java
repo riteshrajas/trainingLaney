@@ -36,7 +36,7 @@ import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
  * Subsystem so it can easily be used in command-based projects.
  */
 @SuppressWarnings("unused")
-public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem{
 
 
     RobotConfig config;

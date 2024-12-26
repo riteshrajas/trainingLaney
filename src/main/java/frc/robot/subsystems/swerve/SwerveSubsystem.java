@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.swerve.FODC;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
@@ -101,7 +101,7 @@ public void simulationPeriodic() {
 }
 
     public double applyDeadband(double value, double deadband) {
-        return Math.abs(value) > deadband ? value : 0;
+        return value;
     }
 
     public double getRobotAngle() {
@@ -134,7 +134,7 @@ public void simulationPeriodic() {
     }
 
     public Command setBetaCmd() {
-        return  new FODC(driverController, this);
+        return null;
     }
 
     public void stop() {
@@ -212,5 +212,17 @@ public void simulationPeriodic() {
 
     public CommandSwerveDrivetrain getDrivetrain() {
         return drivetrain;
+    }
+
+
+
+
+    public DoubleSupplier calculateFODC(double rightx, double righty) {
+        final double angle = Math.toDegrees(Math.atan2(righty, rightx));
+
+        SmartDashboard.putNumber("Angle", angle);
+        SmartDashboard.putNumber("Right X", rightx);
+        SmartDashboard.putNumber("Right Y", righty);
+        return () -> angle;
     }
 }
