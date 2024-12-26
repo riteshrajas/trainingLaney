@@ -414,6 +414,18 @@
               "show_pointer": true,
               "show_ticks": true
             }
+          },
+          {
+            "title": "TeleOp Chooser",
+            "x": 640.0,
+            "y": 576.0,
+            "width": 1024.0,
+            "height": 128.0,
+            "type": "Split Button Chooser",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve Drive/TeleOp Chooser",
+              "period": 0.06
+            }
           }
         ]
       }

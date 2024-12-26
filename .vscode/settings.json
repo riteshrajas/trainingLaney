@@ -7,6 +7,7 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
+    "**/Thumbs.db": true,
     "bin/": true,
     "**/.classpath": true,
     "**/.project": true,
@@ -56,5 +57,6 @@
     "edu.wpi.first.math.proto.*",
     "edu.wpi.first.math.**.proto.*",
     "edu.wpi.first.math.**.struct.*",
-  ]
+  ],
+  "hide-files.files": []
 }

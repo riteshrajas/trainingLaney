@@ -17,7 +17,7 @@ public class RobotMap {
         public static double kFollowerCommand = 6;
 
         public static class SwerveConstants {
-            public static double kRotationP = 0.085; //0.07
+            public static double kRotationP = 0.225; //0.07
             public static double kRotationI = .000;//.0001
             public static double kRotationD = .00;
             public static double speedpercentage = 1.0;

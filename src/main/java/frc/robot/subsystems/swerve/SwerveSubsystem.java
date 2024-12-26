@@ -10,6 +10,9 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.DrivetrainConstants;
@@ -174,7 +178,14 @@ public void simulationPeriodic() {
     }
 
     public double getPIDRotation(double currentX) {
-        return rPidController.calculate(currentX);
+
+    
+        double temp = Math.max(-5, Math.min(5, rPidController.calculate(currentX)));
+    if (Math.abs(temp) < 0.1){
+        return 0;
+    }
+
+        return temp;
     }
 
     public void setRotationSetpoint(double setpoint) {
@@ -224,5 +235,12 @@ public void simulationPeriodic() {
         SmartDashboard.putNumber("Right X", rightx);
         SmartDashboard.putNumber("Right Y", righty);
         return () -> angle;
+    }
+
+
+
+
+    public void resetGyro() {
+        pigeonIMU.setYaw(0);
     }
 }

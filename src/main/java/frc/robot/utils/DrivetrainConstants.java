@@ -18,6 +18,11 @@ public final class DrivetrainConstants {
     public static final SwerveRequest.FieldCentricFacingAngle autoAim = new SwerveRequest.FieldCentricFacingAngle()
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
+        public static final SwerveRequest.RobotCentric robotDrive = new SwerveRequest.RobotCentric()
+            .withDeadband(SafetyMap.kMaxSpeed * 0.1)
+            .withRotationalDeadband(SafetyMap.kMaxAngularRate * 0.1)
+            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+
     public static final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     public static final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 }
