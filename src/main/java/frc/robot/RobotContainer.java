@@ -44,15 +44,13 @@ public class RobotContainer extends RobotFramework {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
         operatorController = UsbMap.operatorController;
-        
 
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
                 SensorMap.GYRO_PORT,
                 driverController);
-        
-        
+
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
         autonChooser = AutoBuilder.buildAutoChooser();
@@ -61,24 +59,22 @@ public class RobotContainer extends RobotFramework {
             {
                 addRequirements(DrivetrainConstants.drivetrain, swerveSubsystem);
             }
+
             @Override
             public void execute() {
                 Command selectedCommand = teleOpChooser.getSelected();
-            if (selectedCommand != null) {
-            selectedCommand.schedule();
-            }
+                if (selectedCommand != null) {
+                    selectedCommand.schedule();
+                }
             }
         });
-      
 
-        
         setupNamedCommands();
         setupPaths();
         configureBindings();
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
-        
-        
+
     }
 
     private void configureBindings() {
@@ -109,7 +105,8 @@ public class RobotContainer extends RobotFramework {
         teleOpChooser.addOption("BeyBlade (Maniac)", ConfigureBeyBlade(driverController, swerveSubsystem));
         teleOpChooser.addOption("FODC System (PID)", ConfigureFODC(driverController, swerveSubsystem));
 
-        Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("TeleOp Chooser", teleOpChooser).withSize(2, 1)
+        Shuffleboard.getTab(Subsystems.SWERVE_DRIVE.getNetworkTable()).add("TeleOp Chooser", teleOpChooser)
+                .withSize(2, 1)
                 .withProperties(Map.of("position", "0, 1"));
     }
 
@@ -130,8 +127,13 @@ public class RobotContainer extends RobotFramework {
         return new Object[] {
         };
     }
-public Command getAutonomousCommand() {return autonChooser.getSelected();}
-public Command getTeleOpCommand() {return teleOpChooser.getSelected();}
 
+    public Command getAutonomousCommand() {
+        return autonChooser.getSelected();
+    }
+
+    public Command getTeleOpCommand() {
+        return teleOpChooser.getSelected();
+    }
 
 }

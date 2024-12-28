@@ -180,13 +180,13 @@ public void simulationPeriodic() {
     public double getPIDRotation(double currentX) {
 
     
-        double temp = Math.max(-5, Math.min(5, rPidController.calculate(currentX)));
-    if (Math.abs(temp) < 0.1){
-        return 0;
-    }
+        double temp = rPidController.calculate(currentX);
+        if (Math.abs(temp) < 0.1){
+            return 0;
+        }
 
-        return temp;
-    }
+            return temp;
+        }
 
     public void setRotationSetpoint(double setpoint) {
         rPidController.setSetpoint(setpoint);

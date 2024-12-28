@@ -276,40 +276,6 @@
                 }
               }
             ]
-          },
-          {
-            "title": "FODC",
-            "x": 0.0,
-            "y": 512.0,
-            "width": 384.0,
-            "height": 256.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "Angle",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Radial Gauge",
-                "properties": {
-                  "topic": "/Shuffleboard/Swerve Drive/FODC/Angle",
-                  "period": 0.06,
-                  "data_type": "double",
-                  "start_angle": 0.0,
-                  "end_angle": 360.0,
-                  "min_value": 0.0,
-                  "max_value": 360.0,
-                  "number_of_labels": 8,
-                  "wrap_value": true,
-                  "show_pointer": true,
-                  "show_ticks": true
-                }
-              }
-            ]
           }
         ],
         "containers": [
@@ -360,19 +326,14 @@
             "y": 0.0,
             "width": 320.0,
             "height": 384.0,
-            "type": "Radial Gauge",
+            "type": "Graph",
             "properties": {
               "topic": "/Shuffleboard/Swerve Drive/Gyro",
               "period": 0.033,
               "data_type": "double",
-              "start_angle": 0.0,
-              "end_angle": 360.0,
-              "min_value": 0.0,
-              "max_value": 360.0,
-              "number_of_labels": 20,
-              "wrap_value": true,
-              "show_pointer": true,
-              "show_ticks": true
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
             }
           },
           {
@@ -400,19 +361,14 @@
             "y": 384.0,
             "width": 256.0,
             "height": 256.0,
-            "type": "Radial Gauge",
+            "type": "Graph",
             "properties": {
               "topic": "/Drive/Speed",
-              "period": 0.1,
+              "period": 0.033,
               "data_type": "double",
-              "start_angle": -140.0,
-              "end_angle": 140.0,
-              "min_value": 0.0,
-              "max_value": 12.0,
-              "number_of_labels": 8,
-              "wrap_value": true,
-              "show_pointer": true,
-              "show_ticks": true
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
             }
           },
           {
@@ -425,6 +381,54 @@
             "properties": {
               "topic": "/Shuffleboard/Swerve Drive/TeleOp Chooser",
               "period": 0.06
+            }
+          },
+          {
+            "title": "Angular Rate",
+            "x": 384.0,
+            "y": 640.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/SmartDashboard/Angular Rate",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Angle",
+            "x": 0.0,
+            "y": 512.0,
+            "width": 384.0,
+            "height": 320.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/Shuffleboard/Swerve Drive/FODC/Angle",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
+            }
+          },
+          {
+            "title": "Angle Diff",
+            "x": 640.0,
+            "y": 704.0,
+            "width": 256.0,
+            "height": 192.0,
+            "type": "Graph",
+            "properties": {
+              "topic": "/SmartDashboard/Angle Diff",
+              "period": 0.033,
+              "data_type": "double",
+              "time_displayed": 5.0,
+              "color": 4278238420,
+              "line_width": 2.0
             }
           }
         ]

@@ -1,20 +1,21 @@
 package frc.robot.utils;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import java.util.Map;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotMap.SafetyMap;
-import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 @SuppressWarnings("unused")
 public class RobotFramework {
-        
-        
+
+        private double snappedAngle = 0.0;
+        private double angle = 0.0;
+        private Smooth anglerate = new Smooth(10);
 
         public Command ConfigureHologenicDrive(CommandXboxController driverController,
                         SwerveSubsystem swerveSubsystem) {
@@ -75,51 +76,77 @@ public class RobotFramework {
                 return new ParallelCommandGroup(
 
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.robotDrive
-                                                .withVelocityX(driverController.getLeftY() * SafetyMap.kMaxSpeed)
-                                                .withRotationalRate(driverController.getRightX()
+                                                .withVelocityX(-driverController.getLeftY() * SafetyMap.kMaxSpeed)
+                                                .withRotationalRate(-driverController.getRightX()
                                                                 * SafetyMap.kMaxAngularRate)));
         }
 
         public Command ConfigureFODC(CommandXboxController controller, SwerveSubsystem swerve) {
+
+                swerve.getTab().addNumber("Angle", () -> snappedAngle)
+                .withWidget(BuiltInWidgets.kGyro)
+                .withPosition(0, 0)
+                .withProperties(Map.of("majorTickSpacing", SafetyMap.FODC.LineCount, "startingAngle", 0));
+        
+        swerve.getTab().addNumber("FODC/Angle", () -> angle)
+                .withWidget(BuiltInWidgets.kGyro)
+                .withPosition(0, 1)  // Changed position to avoid overlap
+                .withProperties(Map.of("majorTickSpacing", SafetyMap.FODC.LineCount, "startingAngle", 0));
                 return new ParallelCommandGroup(
-                                DrivetrainConstants.drivetrain.applyRequest(() -> {
 
-                                        double rightStickX = swerve.applyDeadband(controller.getRightX(), 0.09);
-                                        double rightStickY = swerve.applyDeadband(controller.getRightY(), 0.09);
-                                        double angle;
-                                        double lastAngle = 0;
-                                        double snappedAngle;
-                                        double angleDiff;
+    DrivetrainConstants.drivetrain.applyRequest(() -> {
+        // Initial variables
+        double angleDiff;
+        double rightStickX = swerve.applyDeadband(controller.getRightX(), 0.09);
+        double rightStickY = swerve.applyDeadband(controller.getRightY(), 0.09);
+        double lastAngle = 0;
 
-                                        if (rightStickX != 0 || rightStickY != 0) {
-                                                angle = Math.toDegrees(Math.atan2(-rightStickY, -rightStickX)) - 90; // Adjust
-                                                                                                                     // angle
-                                                                                                                     // by
-                                                                                                                     // subtracting
-                                                                                                                     // 90
-                                                                                                                     // degrees
-                                                lastAngle = angle; // Update last angle when joystick is moved
-                                        } else {
-                                                angle = lastAngle; // Use last angle when joystick is not moved
-                                        }
+        // If joystick is moved, calculate new angle, otherwise use last angle
+        if (rightStickX != 0 || rightStickY != 0) {
+            angle = Math.toDegrees(Math.atan2(-rightStickY, -rightStickX));  // atan2 returns angle in radians, convert to degrees
+            lastAngle = angle; // Update last angle when joystick is moved
+        } else {
+            angle = lastAngle; // Use last angle if joystick is not moved
+        }
 
-                                        snappedAngle = swerve.snapToNearestLine(angle, SafetyMap.FODC.LineCount);
-                                        double robotAngle = swerve.getRobotAngle();
-                                        angleDiff = snappedAngle - robotAngle;
+        if (rightStickX == 0 && rightStickY == 0) {
+            angle = swerve.getRobotAngle();
+        }
 
-                                        if (angleDiff > 180) {
-                                                angleDiff -= 360;
-                                        } else if (angleDiff < -180) {
-                                                angleDiff += 360;
-                                        }
+        // Snap the angle to the nearest grid line based on the configuration
+        double snappedAngle = swerve.snapToNearestLine(angle, SafetyMap.FODC.LineCount);
 
-                                        double anglerr = swerve.getPIDRotation(angleDiff);
-                                        return DrivetrainConstants.drive
-                                                        .withVelocityX(controller.getLeftY() * SafetyMap.kMaxSpeed)
-                                                        .withVelocityY(controller.getLeftX() * SafetyMap.kMaxSpeed)
-                                                        .withRotationalRate(anglerr * SafetyMap.kMaxAngularRate);
+        // Update dashboard with current angle values
+        SmartDashboard.putNumber("Angle", snappedAngle);
+        SmartDashboard.putNumber("FODC/Angle", angle);
 
-                                }));
+        // Calculate angle difference between the snapped angle and the robot's current angle
+        double robotAngle = swerve.getRobotAngle();
+        angleDiff = snappedAngle - robotAngle;
+        SmartDashboard.putNumber("Angle Diff", angleDiff);
+        if (Math.abs(angleDiff) > 10){
+                double angularRate = anglerate.calculate(swerve.getPIDRotation(angleDiff));
+                SmartDashboard.putNumber("Angular Rate", angularRate);
+                
+        
+                // Return the drivetrain command with translational and rotational speeds
+                return DrivetrainConstants.drive
+                        .withVelocityX(controller.getLeftY() * SafetyMap.kMaxSpeed)
+                        .withVelocityY(controller.getLeftX() * SafetyMap.kMaxSpeed)
+                        .withRotationalRate(angularRate * SafetyMap.kMaxAngularRate * SafetyMap.kAngularRateMultiplier);
+        }
+        else{
+                return DrivetrainConstants.drive
+                        .withVelocityX(controller.getLeftY() * SafetyMap.kMaxSpeed)
+                        .withVelocityY(controller.getLeftX() * SafetyMap.kMaxSpeed)
+                        .withRotationalRate(0);
+        }
+
+        
+        // Get the PID-controlled rotational rate for the robot
+       
+    })
+);
 
         }
 
@@ -137,6 +164,5 @@ public class RobotFramework {
                                 }));
 
         }
-
 
 }
