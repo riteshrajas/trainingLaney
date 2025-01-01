@@ -2,14 +2,12 @@ package frc.robot.subsystems.swerve;
 
 import java.util.Map;
 import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -76,22 +74,23 @@ public class SwerveSubsystem extends SubsystemABS {
 
     @Override
     public void init() {
-        robotFacingAngle =  0.0;
-        rPidController = new PIDController(SwerveConstants.kRotationP, SwerveConstants.kRotationI, SwerveConstants.kRotationD);
+        robotFacingAngle = 0.0;
+        rPidController = new PIDController(SwerveConstants.kRotationP, SwerveConstants.kRotationI,
+                SwerveConstants.kRotationD);
         rPidController.setTolerance(SwerveConstants.kRotationTolerance);
         tab = getTab();
-        
+
         tab.addNumber("Gyro", () -> robotFacingAngle)
                 .withWidget(BuiltInWidgets.kGyro) // Use Gyro widget
                 .withProperties(Map.of("startingAngle", 0, "majorTickSpacing", 45)) // Customize properties
                 .withPosition(3, 0)
                 .withSize(3, 3);
 
-        robotSpeedWidget = tab.add("Robot Speed (%)", (RobotMap.SafetyMap.kMaxSpeedChange*100))
-                .withPosition(3,5)
+        robotSpeedWidget = tab.add("Robot Speed (%)", (RobotMap.SafetyMap.kMaxSpeedChange * 100))
+                .withPosition(3, 5)
                 .withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min",0,"max",100))
-                .withSize(6,2);
+                .withProperties(Map.of("min", 0, "max", 100))
+                .withSize(6, 2);
         tab.add("Rotation PID", rPidController);
 
     }
@@ -99,24 +98,27 @@ public class SwerveSubsystem extends SubsystemABS {
     @Override
     public void periodic() {
         robotFacingAngle = drivetrain.getState().Pose.getRotation().getDegrees();
-    
+
     }
 
     @Override
-public void simulationPeriodic() {
-    robotFacingAngle =  drivetrain.getState().Pose.getRotation().getDegrees();
+    public void simulationPeriodic() {
+        robotFacingAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
-}
+    }
 
     public double applyDeadband(double value, double deadband) {
+        if (Math.abs(value) > deadband) {
+            return value;
+        }
         return value;
     }
 
     public double getRobotAngle() {
-            return drivetrain.getState().Pose.getRotation().getDegrees();
+        return robotFacingAngle;
     }
 
-   @Override
+    @Override
     public void setDefaultCmd() {
         drivetrain.setDefaultCommand(null);
 
@@ -124,7 +126,7 @@ public void simulationPeriodic() {
 
     @Override
     public boolean isHealthy() {
-        return true;
+        return drivetrain.isHealthy();
     }
 
     public void drive(double speed, double strafe, double rotation, boolean fieldCentric) {
@@ -135,10 +137,9 @@ public void simulationPeriodic() {
             speed = temp;
         }
         drivetrain.setControl(DrivetrainConstants.drive
-        .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
-        .withVelocityX(speed * SafetyMap.kMaxSpeed)
-        .withVelocityY(strafe * SafetyMap.kMaxSpeed)
-        );
+                .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
+                .withVelocityX(speed * SafetyMap.kMaxSpeed)
+                .withVelocityY(strafe * SafetyMap.kMaxSpeed));
     }
 
     public Command setBetaCmd() {
@@ -150,23 +151,24 @@ public void simulationPeriodic() {
     }
 
     public void printcontroller() {
-        try{
-        tab.addNumber(tabName + "/Left Y", () -> applyDeadband(driverController.getLeftY(), 0.10));
-        tab.addNumber(tabName + "/Left X", () -> applyDeadband(driverController.getLeftX(), 0.10));
-        tab.addNumber(tabName + "/Right X", () -> applyDeadband(driverController.getRightX(), 0.10));
-        tab.addNumber(tabName + "/Right Y", () -> applyDeadband(driverController.getRightY(), 0.10));
-        tab.addNumber(tabName + "/Left Trigger", () -> applyDeadband(driverController.getLeftTriggerAxis(), 0.10));
-        tab.addNumber(tabName + "/Right Trigger", () -> applyDeadband(driverController.getRightTriggerAxis(), 0.10));
-        tab.addBoolean(tabName + "/Left Bumper", driverController.leftBumper());
-        tab.addBoolean(tabName + "/Right Bumper", driverController.rightBumper());
-        tab.addBoolean(tabName + "/A Button", driverController.a());
-        tab.addBoolean(tabName + "/B Button", driverController.b());
-        tab.addBoolean(tabName + "/X Button", driverController.x());
-        tab.addBoolean(tabName + "/Y Button", driverController.y());
-        tab.addBoolean(tabName + "/Start Button", driverController.start());
-        tab.addBoolean(tabName + "/Back Button", driverController.back());
+        try {
+            tab.addNumber(tabName + "/Left Y", () -> applyDeadband(driverController.getLeftY(), 0.10));
+            tab.addNumber(tabName + "/Left X", () -> applyDeadband(driverController.getLeftX(), 0.10));
+            tab.addNumber(tabName + "/Right X", () -> applyDeadband(driverController.getRightX(), 0.10));
+            tab.addNumber(tabName + "/Right Y", () -> applyDeadband(driverController.getRightY(), 0.10));
+            tab.addNumber(tabName + "/Left Trigger", () -> applyDeadband(driverController.getLeftTriggerAxis(), 0.10));
+            tab.addNumber(tabName + "/Right Trigger",
+                    () -> applyDeadband(driverController.getRightTriggerAxis(), 0.10));
+            tab.addBoolean(tabName + "/Left Bumper", driverController.leftBumper());
+            tab.addBoolean(tabName + "/Right Bumper", driverController.rightBumper());
+            tab.addBoolean(tabName + "/A Button", driverController.a());
+            tab.addBoolean(tabName + "/B Button", driverController.b());
+            tab.addBoolean(tabName + "/X Button", driverController.x());
+            tab.addBoolean(tabName + "/Y Button", driverController.y());
+            tab.addBoolean(tabName + "/Start Button", driverController.start());
+            tab.addBoolean(tabName + "/Back Button", driverController.back());
         } catch (Exception e) {
-            
+
         }
     }
 
@@ -175,7 +177,6 @@ public void simulationPeriodic() {
         return Math.round(angle / snapAngle) * snapAngle;
     }
 
-
     @Override
     public void Failsafe() {
         stop();
@@ -183,14 +184,13 @@ public void simulationPeriodic() {
 
     public double getPIDRotation(double currentX) {
 
-    
         double temp = rPidController.calculate(currentX);
-        if (Math.abs(temp) < 0.1){
+        if (Math.abs(temp) < 0.1) {
             return 0;
         }
 
-            return temp;
-        }
+        return temp;
+    }
 
     public void setRotationSetpoint(double setpoint) {
         rPidController.setSetpoint(setpoint);
@@ -204,33 +204,25 @@ public void simulationPeriodic() {
         rPidController.setTolerance(tolerance);
     }
 
-
-
-
-
     public void setControl(double rotation, double strafe, double forward) {
         drivetrain.setControl(DrivetrainConstants.drive
-        .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
-        .withVelocityX(forward * SafetyMap.kMaxSpeed)
-        .withVelocityY(strafe * SafetyMap.kMaxSpeed)
+                .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
+                .withVelocityX(forward * SafetyMap.kMaxSpeed)
+                .withVelocityY(strafe * SafetyMap.kMaxSpeed)
 
         );
     }
 
     public void setControl(double rotation, double strafe, double forward, double heading) {
         drivetrain.setControl(DrivetrainConstants.drive
-        .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
-        .withVelocityX(forward* SafetyMap.kMaxSpeed)
-        .withVelocityY(strafe* SafetyMap.kMaxSpeed)
-        );
+                .withRotationalRate(rotation * SafetyMap.kMaxAngularAcceleration)
+                .withVelocityX(forward * SafetyMap.kMaxSpeed)
+                .withVelocityY(strafe * SafetyMap.kMaxSpeed));
     }
 
     public CommandSwerveDrivetrain getDrivetrain() {
         return drivetrain;
     }
-
-
-
 
     public DoubleSupplier calculateFODC(double rightx, double righty) {
         final double angle = Math.toDegrees(Math.atan2(righty, rightx));
@@ -241,46 +233,29 @@ public void simulationPeriodic() {
         return () -> angle;
     }
 
-
-
-
     public void resetGyro() {
         pigeonIMU.setYaw(0);
     }
 
-
-
-
-    public Pose2d   getPose() {
+    public Pose2d getPose() {
         return drivetrain.getState().Pose;
-    
-   }
 
-
-
+    }
 
     public void driveRobotRelative(double x, double y, int i) {
-  
+
         drivetrain.setControl(DrivetrainConstants.robotDrive
-        .withRotationalRate(i * SafetyMap.kMaxAngularAcceleration)
-        .withVelocityX(x * SafetyMap.kMaxSpeed)
-        .withVelocityY(y * SafetyMap.kMaxSpeed)
-        );
+                .withRotationalRate(i * SafetyMap.kMaxAngularAcceleration)
+                .withVelocityX(x * SafetyMap.kMaxSpeed)
+                .withVelocityY(y * SafetyMap.kMaxSpeed));
     }
 
     public void driveFieldRelative(double x, double y, double i) {
         drivetrain.setControl(DrivetrainConstants.drive
-        .withRotationalRate(i * SafetyMap.kMaxAngularAcceleration)
-        .withVelocityX(x * SafetyMap.kMaxSpeed)
-        .withVelocityY(y * SafetyMap.kMaxSpeed)
-        );
+                .withRotationalRate(i * SafetyMap.kMaxAngularAcceleration)
+                .withVelocityX(x * SafetyMap.kMaxSpeed)
+                .withVelocityY(y * SafetyMap.kMaxSpeed));
     }
-
-
-
-
-
-
 
     // Add these helper methods
     private void resetPose(Pose2d pose) {

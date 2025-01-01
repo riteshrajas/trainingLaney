@@ -1,5 +1,8 @@
 package frc.robot.utils;
 
+/**
+ * Enum representing different object types for vision processing.
+ */
 public enum ObjectType {
     APRIL_TAG("April Tag", "This object type is for AprilTags", "limelight-notes", 480, 640, 0.0, 59.6, 45.7),
     INFINITE_CHARGE_BALLS("Infinite Charge Balls", "This object type is for Infinite Charge Balls", "limelight-notes", 480, 640, 0.0, 59.6, 45.7),
@@ -25,41 +28,93 @@ public enum ObjectType {
         this.verticalFov = verticalFov;
     }
 
+    /**
+     * Gets the name of the object type.
+     * 
+     * @return the name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the description of the object type.
+     * 
+     * @return the description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Gets the network table name for the object type.
+     * 
+     * @return the network table name.
+     */
     public String getTable() {
         return table;
     }
 
+    /**
+     * Gets the camera height for the object type.
+     * 
+     * @return the camera height.
+     */
     public int getCameraHeight() {
         return cameraHeight;
     }
 
+    /**
+     * Gets the camera width for the object type.
+     * 
+     * @return the camera width.
+     */
     public int getCameraWidth() {
         return cameraWidth;
     }
 
+    /**
+     * Gets the target height for the object type.
+     * 
+     * @return the target height.
+     */
     public double getTargetHeight() {
         return targetHeight;
     }
 
+    /**
+     * Gets the horizontal field of view for the object type.
+     * 
+     * @return the horizontal field of view.
+     */
     public double getHorizontalFov() {
         return horizontalFov;
     }
 
+    /**
+     * Gets the vertical field of view for the object type.
+     * 
+     * @return the vertical field of view.
+     */
     public double getVerticalFov() {
         return verticalFov;
     }
 
+    /**
+     * Gets the network table name for the object type.
+     * 
+     * @return the network table name.
+     */
     public String getNetworkTable() {
-        return (table);
+        return table;
     }
+
+    /**
+     * Gets an instance of the object type.
+     * 
+     * @param type the object type.
+     * @return the object type instance.
+     */
     public static ObjectType getInstance(ObjectType type) {
         switch (type) {
             case APRIL_TAG:

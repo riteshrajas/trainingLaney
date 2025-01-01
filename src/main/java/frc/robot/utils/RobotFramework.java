@@ -11,12 +11,22 @@ import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 @SuppressWarnings("unused")
+/**
+ * Class for configuring robot drive modes.
+ */
 public class RobotFramework {
 
         private double snappedAngle = 0.0;
         private double angle = 0.0;
         private Smooth anglerate = new Smooth(10);
 
+        /**
+         * Configures the hologenic drive mode.
+         * 
+         * @param driverController the driver controller.
+         * @param swerveSubsystem the swerve subsystem.
+         * @return the command to configure hologenic drive.
+         */
         public Command ConfigureHologenicDrive(CommandXboxController driverController,
                         SwerveSubsystem swerveSubsystem) {
                 return new ParallelCommandGroup(
@@ -30,6 +40,13 @@ public class RobotFramework {
                                                                 * SafetyMap.kAngularRateMultiplier)));
         }
 
+        /**
+         * Configures the beyblade drive mode.
+         * 
+         * @param driverController the driver controller.
+         * @param swerveSubsystem the swerve subsystem.
+         * @return the command to configure beyblade drive.
+         */
         public Command ConfigureBeyBlade(CommandXboxController driverController, SwerveSubsystem swerveSubsystem) {
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
@@ -41,6 +58,13 @@ public class RobotFramework {
                                                                 * SafetyMap.kAngularRateMultiplier)));
         }
 
+        /**
+         * Configures the tank drive mode.
+         * 
+         * @param driverController the driver controller.
+         * @param swerveSubsystem the swerve subsystem.
+         * @return the command to configure tank drive.
+         */
         public Command ConfigureTankDrive(CommandXboxController driverController, SwerveSubsystem swerveSubsystem) {
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> {
@@ -72,6 +96,13 @@ public class RobotFramework {
                                 }));
         }
 
+        /**
+         * Configures the arcade drive mode.
+         * 
+         * @param driverController the driver controller.
+         * @param swerveSubsystem the swerve subsystem.
+         * @return the command to configure arcade drive.
+         */
         public Command ConfigureArcadeDrive(CommandXboxController driverController, SwerveSubsystem swerveSubsystem) {
                 return new ParallelCommandGroup(
 
@@ -81,6 +112,13 @@ public class RobotFramework {
                                                                 * SafetyMap.kMaxAngularRate)));
         }
 
+        /**
+         * Configures the FODC drive mode.
+         * 
+         * @param controller the driver controller.
+         * @param swerve the swerve subsystem.
+         * @return the command to configure FODC drive.
+         */
         public Command ConfigureFODC(CommandXboxController controller, SwerveSubsystem swerve) {
 
                 swerve.getTab().addNumber("Angle", () -> snappedAngle)
@@ -150,6 +188,13 @@ public class RobotFramework {
 
         }
 
+        /**
+         * Configures the orbit mode.
+         * 
+         * @param controller the driver controller.
+         * @param swerve the swerve subsystem.
+         * @return the command to configure orbit mode.
+         */
         public Command ConfigureOrbitMode(CommandXboxController controller, SwerveSubsystem swerve) {
 
                 return new ParallelCommandGroup(

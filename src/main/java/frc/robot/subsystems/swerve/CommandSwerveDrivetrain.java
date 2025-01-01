@@ -3,7 +3,9 @@ package frc.robot.subsystems.swerve;
 import static edu.wpi.first.units.Units.*;
 
 import java.lang.Thread.State;
+import java.lang.reflect.Array;
 import java.util.function.Supplier;
+import java.util.List;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
@@ -347,4 +349,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void stopModules() {
         stopModules();
     }
-}
+    public boolean isHealthy() {
+        boolean allHealthy = true;
+        SwerveModule[] modules = getModules();
+
+        for (SwerveModule module : modules) {
+            if (!module.getDriveMotor().isAlive()  || !module.getSteerMotor().isAlive()) {
+                allHealthy = false;
+                DriverStation.reportWarning("Module " + module.getCANcoder().getDeviceID() + " is not healthy!", false);
+            }
+        }
+
+        return allHealthy;
+    }    }

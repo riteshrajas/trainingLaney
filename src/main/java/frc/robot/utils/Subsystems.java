@@ -1,5 +1,8 @@
 package frc.robot.utils;
 
+/**
+ * Enum representing different subsystems of the robot.
+ */
 public enum Subsystems {
     SWERVE_DRIVE("Swerve Drive", "This Subsystem is responsible for controlling the Swerve Drive"),
     INTAKE("Intake", "This Subsystem is responsible for controlling the Intake"),
@@ -26,14 +29,29 @@ public enum Subsystems {
         this.description = description;
     }
 
+    /**
+     * Gets the network table name of the subsystem.
+     * 
+     * @return the network table name.
+     */
     public String getNetworkTable() {
         return ntName;
     }
 
+    /**
+     * Gets the description of the subsystem.
+     * 
+     * @return the description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Gets an instance of the subsystem.
+     * 
+     * @return the subsystem instance.
+     */
     public SubsystemABS getInstance() {
         switch (this) {
             case SWERVE_DRIVE:

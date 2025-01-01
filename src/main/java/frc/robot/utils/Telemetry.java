@@ -16,13 +16,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
+/**
+ * Class for handling telemetry data.
+ */
 public class Telemetry {
     private final double MaxSpeed;
 
     /**
-     * Construct a telemetry object, with the specified max speed of the robot
+     * Construct a telemetry object, with the specified max speed of the robot.
      * 
-     * @param maxSpeed Maximum speed in meters per second
+     * @param maxSpeed Maximum speed in meters per second.
      */
     public Telemetry(double maxSpeed) {
         MaxSpeed = maxSpeed;
@@ -73,7 +76,11 @@ public class Telemetry {
             .append(new MechanismLigament2d("Direction", 0.1, 0, 0, new Color8Bit(Color.kWhite))),
     };
 
-    /* Accept the swerve drive state and telemeterize it to smartdashboard */
+    /**
+     * Accept the swerve drive state and telemeterize it to smartdashboard.
+     * 
+     * @param state the swerve drive state.
+     */
     public void telemeterize(SwerveDriveState state) {
         /* Telemeterize the pose */
         Pose2d pose = state.Pose;
