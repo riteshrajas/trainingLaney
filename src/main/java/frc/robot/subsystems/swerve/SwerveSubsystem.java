@@ -268,6 +268,14 @@ public void simulationPeriodic() {
         );
     }
 
+    public void driveFieldRelative(double x, double y, double i) {
+        drivetrain.setControl(DrivetrainConstants.drive
+        .withRotationalRate(i * SafetyMap.kMaxAngularAcceleration)
+        .withVelocityX(x * SafetyMap.kMaxSpeed)
+        .withVelocityY(y * SafetyMap.kMaxSpeed)
+        );
+    }
+
 
 
 
