@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;

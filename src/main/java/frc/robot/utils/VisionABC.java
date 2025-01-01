@@ -39,6 +39,7 @@ public abstract class VisionABC extends SubsystemABS {
   public abstract void setCamMode(int mode);
   public abstract Command BlinkLED();
   public abstract Command TurnOffLED();
+  
 
   @Override
   public abstract void simulationPeriodic();

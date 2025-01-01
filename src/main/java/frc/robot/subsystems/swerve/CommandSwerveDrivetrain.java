@@ -2,12 +2,14 @@ package frc.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.lang.Thread.State;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -18,9 +20,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -300,5 +306,45 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public Command SpeedPercentage(Double Speed) {
         return run(() -> SwerveConstants.speedpercentage = Speed);
+    }
+
+    // Constants
+    private static final double MAX_VELOCITY = 4.0; // meters per second
+    private static final double MAX_ACCELERATION = 2.0; // meters per second squared
+
+    public double getMaxVelocity() {
+        return MAX_VELOCITY;
+    }
+
+    public double getMaxAcceleration() {
+        return MAX_ACCELERATION;
+    }
+
+    public SwerveDriveKinematics getDriveKinematics() {
+        return getSwerveDriveKinematics(); // Assuming kinematics is defined as a field
+    }
+
+    public SwerveDriveKinematics getSwerveDriveKinematics() {
+        return getKinematics();
+    }
+
+    public Pose2d getPose() {
+        return getState().Pose;
+    }
+
+    public TrapezoidProfile.Constraints getThetaConstraints() {
+        return new TrapezoidProfile.Constraints(
+            Math.PI, // Max angular velocity in rad/s
+            Math.PI  // Max angular acceleration in rad/s^2
+        );
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        resetPose(pose);
+    }
+
+
+    public void stopModules() {
+        stopModules();
     }
 }

@@ -5,14 +5,23 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.units.BaseUnits;
+import edu.wpi.first.units.measure.LinearAcceleration;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -41,6 +50,7 @@ public class SwerveSubsystem extends SubsystemABS {
     private SimpleWidget robotSpeedWidget;
     private FieldMap fieldMap;
     private PIDController rPidController;
+    private AutoBuilder builder;
 
     private double simX = 0;
     private double simY = 0;
@@ -62,13 +72,7 @@ public class SwerveSubsystem extends SubsystemABS {
             // Handle exception as needed
             e.printStackTrace();
         }
-
-        
-
     }
-
-    
-
 
     @Override
     public void init() {
@@ -243,4 +247,40 @@ public void simulationPeriodic() {
     public void resetGyro() {
         pigeonIMU.setYaw(0);
     }
+
+
+
+
+    public Pose2d   getPose() {
+        return drivetrain.getState().Pose;
+    
+   }
+
+
+
+
+    public void driveRobotRelative(double x, double y, int i) {
+  
+        drivetrain.setControl(DrivetrainConstants.robotDrive
+        .withRotationalRate(i * SafetyMap.kMaxAngularAcceleration)
+        .withVelocityX(x * SafetyMap.kMaxSpeed)
+        .withVelocityY(y * SafetyMap.kMaxSpeed)
+        );
+    }
+
+
+
+
+
+
+
+    // Add these helper methods
+    private void resetPose(Pose2d pose) {
+        drivetrain.resetPose(pose);
+    }
+
+    private ChassisSpeeds getChassisSpeeds() {
+        return drivetrain.getState().Speeds;
+    }
+
 }

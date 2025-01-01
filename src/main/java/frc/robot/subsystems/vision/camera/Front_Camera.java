@@ -109,7 +109,7 @@ public class Front_Camera extends VisionABC {
 
 	@Override
 	public void setDefaultCmd() {
-		// TODO Auto-generated method stub
+	
 		
 	}	
 	@Override
