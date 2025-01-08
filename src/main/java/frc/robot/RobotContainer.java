@@ -136,4 +136,9 @@ public class RobotContainer extends RobotFramework {
         return teleOpChooser.getSelected();
     }
 
+    public Command TestSystems() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'TestSystems'");
+    }
+
 }

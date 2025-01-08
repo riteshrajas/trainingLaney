@@ -18,6 +18,7 @@ import frc.robot.constants.ComandCenter;
 import frc.robot.utils.AutonTester;
 import frc.robot.utils.RobotTester;
 import frc.robot.utils.SafetyManager;
+import frc.robot.utils.SystemCheckUp;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -129,6 +130,7 @@ public class Robot extends TimedRobot
         CommandScheduler.getInstance().cancelAll();
         new RobotTester(robotContainer.TestCommands());
         new AutonTester(robotContainer.TestAutonCommands());
+        new SystemCheckUp(robotContainer.TestSystems());
     }
     
     /** This method is called periodically during test mode. */
