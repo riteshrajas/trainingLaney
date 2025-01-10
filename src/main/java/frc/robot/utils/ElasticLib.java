@@ -13,6 +13,9 @@ import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StringTopic;
 
+/**
+ * The ElasticLib class provides methods to send notifications to the Elastic dashboard.
+ */
 public final class ElasticLib {
   private static final StringTopic topic =
       NetworkTableInstance.getDefault().getStringTopic("/Elastic/RobotNotifications");
@@ -142,6 +145,8 @@ public final class ElasticLib {
     }
 
     /**
+     * Gets the level of this notification
+     *
      * @return the level of this notification
      */
     public NotificationLevel getLevel() {
@@ -175,6 +180,11 @@ public final class ElasticLib {
       this.description = description;
     }
 
+    /**
+     * Gets the description of this notification
+     *
+     * @return the description of this notification
+     */
     public String getDescription() {
       return description;
     }

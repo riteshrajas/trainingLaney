@@ -131,7 +131,7 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
-.WPILib/
+
 # Windows shortcuts
 *.lnk
 
@@ -182,3 +182,6 @@ ctre_sim/
 # clangd
 /.cache
 compile_commands.json
+
+# Eclipse generated file for annotation processors
+.factorypath

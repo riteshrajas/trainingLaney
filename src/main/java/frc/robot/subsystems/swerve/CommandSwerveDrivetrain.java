@@ -6,13 +6,11 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -23,24 +21,19 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants.TunerSwerveDrivetrain;
+
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-@SuppressWarnings("unused")
-public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem{
-
-
-    RobotConfig config;
-    
+public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -97,7 +90,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
      * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
      */
-    
     private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
         new SysIdRoutine.Config(
             /* This is in radians per second², but SysId only supports "volts per second" */
@@ -127,13 +119,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
      * <p>
      * This constructs the underlying hardware devices, so users should not construct
-     * the devices themselves. If they need the devices, they can access them
-     * through getters in the classes.
+     * the devices themselves. If they need the devices, they can access them through
+     * getters in the classes.
      *
      * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
      * @param modules             Constants for each specific module
      */
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(
+        SwerveDrivetrainConstants drivetrainConstants,
+        SwerveModuleConstants<?, ?, ?>... modules
+    ) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
@@ -145,8 +140,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
      * <p>
      * This constructs the underlying hardware devices, so users should not construct
-     * the devices themselves. If they need the devices, they can access them
-     * through getters in the classes.
+     * the devices themselves. If they need the devices, they can access them through
+     * getters in the classes.
      *
      * @param drivetrainConstants        Drivetrain-wide constants for the swerve drive
      * @param odometryUpdateFrequency    The frequency to run the odometry loop. If
@@ -154,8 +149,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      *                                   CAN FD, and 100 Hz on CAN 2.0.
      * @param modules                    Constants for each specific module
      */
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        super(drivetrainConstants, OdometryUpdateFrequency, modules);
+    public CommandSwerveDrivetrain(
+        SwerveDrivetrainConstants drivetrainConstants,
+        double odometryUpdateFrequency,
+        SwerveModuleConstants<?, ?, ?>... modules
+    ) {
+        super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -174,13 +173,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      *                                   unspecified or set to 0 Hz, this is 250 Hz on
      *                                   CAN FD, and 100 Hz on CAN 2.0.
      * @param odometryStandardDeviation  The standard deviation for odometry calculation
-     * @param visionStandardDeviation    The standard deviation for vision calculation
+     *                                  in the form [x, y, theta]ᵀ, with units in meters
+     *                                  and radians
+     * @param visionStandardDeviation   The standard deviation for vision calculation
+     *                                  in the form [x, y, theta]ᵀ, with units in meters
+     *                                  and radians
      * @param modules                    Constants for each specific module
      */
     public CommandSwerveDrivetrain(
-            SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
-            Matrix<N3, N1> odometryStandardDeviation, Matrix<N3, N1> visionStandardDeviation,
-            SwerveModuleConstants... modules) {
+        SwerveDrivetrainConstants drivetrainConstants,
+        double odometryUpdateFrequency,
+        Matrix<N3, N1> odometryStandardDeviation,
+        Matrix<N3, N1> visionStandardDeviation,
+        SwerveModuleConstants<?, ?, ?>... modules
+    ) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
         if (Utils.isSimulation()) {
             startSimThread();
@@ -188,14 +194,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         configureAutoBuilder();
     }
 
-    public void configureAutoBuilder() {
+    private void configureAutoBuilder() {
         try {
-         config = RobotConfig.fromGUISettings();
-        } catch(Exception exc){
-            DriverStation.reportError("Failed to get robot config settings", exc.getStackTrace());
-        }
-        try {
-            
+            var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
                 () -> getState().Pose,   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
@@ -218,9 +219,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 this // Subsystem for requirements
             );
         } catch (Exception ex) {
-            SmartDashboard.putString("PathPlannerError", ex.getMessage());
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
-            
         }
     }
 
@@ -265,8 +264,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
-
-         
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -294,11 +291,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    public Command getAutoPath(String pathName) {
-        return new PathPlannerAuto(pathName);
-    }
-
-    public Command SpeedPercentage(Double Speed) {
-        return run(() -> SwerveConstants.speedpercentage = Speed);
+    public boolean isHealthy() {
+        return true;
     }
 }

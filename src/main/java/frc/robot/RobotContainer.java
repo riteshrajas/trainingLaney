@@ -1,11 +1,18 @@
 package frc.robot;
 
+
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
+
+import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -15,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.DriveForwardCommand;
+import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
@@ -78,11 +85,16 @@ public class RobotContainer extends RobotFramework {
     }
 
     private void configureBindings() {
+        Runnable printSction = () -> System.out.println("zHello");
         driverController.start()
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
-        driverController.a().whileTrue(new PathPlannerAuto("simAuto"));
-
+        try {
+            driverController.a().onTrue(AutoBuilder.followPath(PathPlannerPath.fromPathFile("New Path")));
+        } catch (FileVersionException | IOException | ParseException e) {
+        
+            e.printStackTrace();
+        }
     }
 
     private void setupNamedCommands() {
@@ -134,6 +146,11 @@ public class RobotContainer extends RobotFramework {
 
     public Command getTeleOpCommand() {
         return teleOpChooser.getSelected();
+    }
+
+    public Command TestSystems() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'TestSystems'");
     }
 
 }

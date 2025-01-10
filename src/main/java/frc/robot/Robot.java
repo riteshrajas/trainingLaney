@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,6 +18,7 @@ import frc.robot.constants.ComandCenter;
 import frc.robot.utils.AutonTester;
 import frc.robot.utils.RobotTester;
 import frc.robot.utils.SafetyManager;
+import frc.robot.utils.SystemCheckUp;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -35,6 +38,9 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
+        // Add PathPlanner warm-up before other initializations
+        FollowPathCommand.warmupCommand().schedule();
+        
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         robotContainer = new RobotContainer();
         new SafetyManager(robotContainer.SafeGuardSystems());
@@ -124,6 +130,7 @@ public class Robot extends TimedRobot
         CommandScheduler.getInstance().cancelAll();
         new RobotTester(robotContainer.TestCommands());
         new AutonTester(robotContainer.TestAutonCommands());
+        new SystemCheckUp(robotContainer.TestSystems());
     }
     
     /** This method is called periodically during test mode. */
