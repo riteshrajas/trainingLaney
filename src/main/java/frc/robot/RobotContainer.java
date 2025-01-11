@@ -11,10 +11,12 @@ import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -75,6 +77,7 @@ public class RobotContainer extends RobotFramework {
                 }
             }
         });
+    
 
         setupNamedCommands();
         setupPaths();
@@ -89,10 +92,19 @@ public class RobotContainer extends RobotFramework {
         driverController.start()
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
-        try {
-            driverController.a().onTrue(AutoBuilder.followPath(PathPlannerPath.fromPathFile("New Path")));
-        } catch (FileVersionException | IOException | ParseException e) {
+        // try {
+        //     driverController.a().onTrue(AutoBuilder.followPath(PathPlannerPath.fromPathFile("New New Path")));
+        // } catch (FileVersionException | IOException | ParseException e) {
         
+        //     e.printStackTrace();
+        // }
+
+        try{
+        driverController.b().onTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("New New Path"), new PathConstraints(
+            3.0, 4.0, // Max velocity and acceleration
+            Units.degreesToRadians(540), Units.degreesToRadians(720) // Max angular velocity and acceleration
+        )));
+        } catch (FileVersionException | IOException | ParseException e) {
             e.printStackTrace();
         }
     }

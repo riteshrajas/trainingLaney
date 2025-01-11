@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -38,8 +40,8 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
-        // Add PathPlanner warm-up before other initializations
-        FollowPathCommand.warmupCommand().schedule();
+        Pathfinding.setPathfinder(new LocalADStarAK());
+        // Add PathPlanner warm-up before other initialization
         
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         robotContainer = new RobotContainer();
@@ -52,7 +54,7 @@ public class Robot extends TimedRobot
 
         // Record both DS control and joystick data
         DriverStation.startDataLog(DataLogManager.getLog());
-
+         PathfindingCommand.warmupCommand().schedule();
     }
     
     
