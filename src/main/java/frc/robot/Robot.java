@@ -5,10 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import com.pathplanner.lib.commands.FollowPathCommand;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.constants.ComandCenter;
 import frc.robot.utils.AutonTester;
+import frc.robot.utils.LocalADStarAK;
 import frc.robot.utils.RobotTester;
 import frc.robot.utils.SafetyManager;
 import frc.robot.utils.SystemCheckUp;
@@ -31,7 +34,7 @@ import frc.robot.utils.SystemCheckUp;
 public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
-    
+    private CANrange range;
     private RobotContainer robotContainer;
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -40,6 +43,7 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
+        range = new CANrange(55);
         Pathfinding.setPathfinder(new LocalADStarAK());
         // Add PathPlanner warm-up before other initialization
         
@@ -114,6 +118,7 @@ public class Robot extends TimedRobot
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
+
         if (autonomousCommand != null)
         {
             autonomousCommand.cancel();
@@ -123,7 +128,13 @@ public class Robot extends TimedRobot
     
     /** This method is called periodically during operator control. */
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        var rangeDistance = range.getDistance();
+        
+        SmartDashboard.putNumber("Distance",rangeDistance.getValue().magnitude());
+
+        SmartDashboard.putString("Distance Unit",rangeDistance.getValue().unit().toString());
+    }
     
     
     @Override

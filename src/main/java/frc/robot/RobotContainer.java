@@ -88,21 +88,16 @@ public class RobotContainer extends RobotFramework {
     }
 
     private void configureBindings() {
-        Runnable printSction = () -> System.out.println("zHello");
         driverController.start()
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
-        // try {
-        //     driverController.a().onTrue(AutoBuilder.followPath(PathPlannerPath.fromPathFile("New New Path")));
-        // } catch (FileVersionException | IOException | ParseException e) {
-        
-        //     e.printStackTrace();
-        // }
+
 
         try{
-        driverController.b().onTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("New New Path"), new PathConstraints(
-            3.0, 4.0, // Max velocity and acceleration
-            Units.degreesToRadians(540), Units.degreesToRadians(720) // Max angular velocity and acceleration
+
+            driverController.b()
+                .onTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("New New Path"), 
+                new PathConstraints(3.0, 4.0,Units.degreesToRadians(0), Units.degreesToRadians(360) 
         )));
         } catch (FileVersionException | IOException | ParseException e) {
             e.printStackTrace();

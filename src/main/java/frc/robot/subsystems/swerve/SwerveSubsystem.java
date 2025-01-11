@@ -31,7 +31,6 @@ import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.DrivetrainConstants;
-import frc.robot.utils.FieldMap;
 
 @SuppressWarnings("unused")
 public class SwerveSubsystem extends SubsystemABS {
@@ -43,7 +42,7 @@ public class SwerveSubsystem extends SubsystemABS {
     public CommandSwerveDrivetrain drivetrain;
     private Double robotFacingAngle;
     private SimpleWidget robotSpeedWidget;
-    private FieldMap fieldMap;
+
     private PIDController rPidController;
     private AutoBuilder builder;
 
@@ -57,7 +56,6 @@ public class SwerveSubsystem extends SubsystemABS {
         this.pigeonIMU = new Pigeon2(pigeonIMUID); // Initialize Pigeon IMU
         this.driverController = driverController;
         this.drivetrain = DrivetrainConstants.drivetrain;
-        this.fieldMap = new FieldMap();
         printcontroller();
 
         RobotConfig config;
@@ -89,7 +87,8 @@ public class SwerveSubsystem extends SubsystemABS {
                 .withProperties(Map.of("min", 0, "max", 100))
                 .withSize(6, 2);
         tab.add("Rotation PID", rPidController);
-
+        tab.addNumber("Band/Robot X", ()-> drivetrain.getState().Pose.getX());
+        tab.addNumber("Band/Robot Y", ()-> drivetrain.getState().Pose.getY());
     }
 
     @Override
