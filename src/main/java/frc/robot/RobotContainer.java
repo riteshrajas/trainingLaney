@@ -29,8 +29,9 @@ import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
+import frc.robot.subsystems.vision.camera.Camera;
 import frc.robot.utils.DrivetrainConstants;
+import frc.robot.utils.ObjectType;
 import frc.robot.utils.RobotFramework;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
@@ -46,6 +47,9 @@ public class RobotContainer extends RobotFramework {
     private Telemetry telemetry;
     private SendableChooser<Command> teleOpChooser;
     private SendableChooser<Command> autonChooser;
+    private Camera frontCamera;
+    private Camera rearCamera;
+
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
@@ -56,7 +60,21 @@ public class RobotContainer extends RobotFramework {
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
                 SensorMap.GYRO_PORT,
-                driverController);
+                driverController
+        );
+
+        frontCamera = new Camera(
+                Subsystems.VISION,
+                Subsystems.VISION.getNetworkTable(),
+                ObjectType.APRIL_TAG_FRONT
+        );
+
+        rearCamera = new Camera(
+                Subsystems.VISION,
+                Subsystems.VISION.getNetworkTable(),
+                ObjectType.APRIL_TAG_BACK
+        );
+
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -126,6 +144,9 @@ public class RobotContainer extends RobotFramework {
     public SubsystemABS[] SafeGuardSystems() {
         return new SubsystemABS[] {
                 swerveSubsystem,
+                frontCamera,
+                rearCamera
+
         };
     }
 

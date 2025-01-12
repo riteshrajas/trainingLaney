@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.utils.ObjectType;
 
 public class RobotMap {
 
@@ -81,6 +82,7 @@ public class RobotMap {
                 public static final double TARGET_HEIGHT = 0.0;
                 public static final double HORIZONTAL_FOV = 59.6;
                 public static final double VERTICAL_FOV = 45.7;
+
             }
         
             public static class FrontCam {

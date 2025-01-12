@@ -2,22 +2,12 @@ package frc.robot.subsystems.swerve;
 
 import java.util.Map;
 import java.util.function.DoubleSupplier;
-import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -27,11 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotMap;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SafetyMap.SwerveConstants;
-import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.DrivetrainConstants;
-import frc.robot.utils.FieldMap;
 
 @SuppressWarnings("unused")
 public class SwerveSubsystem extends SubsystemABS {
@@ -43,9 +31,9 @@ public class SwerveSubsystem extends SubsystemABS {
     public CommandSwerveDrivetrain drivetrain;
     private Double robotFacingAngle;
     private SimpleWidget robotSpeedWidget;
-    private FieldMap fieldMap;
     private PIDController rPidController;
     private AutoBuilder builder;
+    private Integer closestTAG;
 
     private double simX = 0;
     private double simY = 0;
@@ -57,7 +45,6 @@ public class SwerveSubsystem extends SubsystemABS {
         this.pigeonIMU = new Pigeon2(pigeonIMUID); // Initialize Pigeon IMU
         this.driverController = driverController;
         this.drivetrain = DrivetrainConstants.drivetrain;
-        this.fieldMap = new FieldMap();
         printcontroller();
 
         RobotConfig config;
@@ -95,7 +82,6 @@ public class SwerveSubsystem extends SubsystemABS {
     @Override
     public void periodic() {
         robotFacingAngle = drivetrain.getState().Pose.getRotation().getDegrees();
-
     }
 
     @Override
