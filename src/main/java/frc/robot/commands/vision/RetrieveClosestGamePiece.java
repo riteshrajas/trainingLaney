@@ -6,15 +6,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.utils.VisionObject;
 
-public class RetriveClosestGamePiece extends Command {
+public class RetrieveClosestGamePiece extends Command {
    
     private final SwerveSubsystem swerveSubsystem;
     private VisionObject visionTarget;
     private static final double MAX_SPEED = 0.5; // Maximum approach speed
     private static final double MIN_DISTANCE = 0.1; // Minimum distance threshold
     private static final double MAX_DISTANCE = 5.0; // Maximum tracking distance
-    
-    public RetriveClosestGamePiece(SwerveSubsystem swerveSubsystem, VisionObject visionTarget) {
+    public RetrieveClosestGamePiece(SwerveSubsystem swerveSubsystem, VisionObject visionTarget) {
         this.swerveSubsystem = swerveSubsystem;
         this.visionTarget = visionTarget;
         addRequirements(swerveSubsystem);

@@ -31,9 +31,9 @@ public class RobotFramework {
                         SwerveSubsystem swerveSubsystem) {
                 return new ParallelCommandGroup(
                                 DrivetrainConstants.drivetrain.applyRequest(() -> DrivetrainConstants.drive
-                                                .withVelocityX(driverController.getLeftY() * SafetyMap.kMaxSpeed
+                                                .withVelocityX(-driverController.getLeftY() * SafetyMap.kMaxSpeed
                                                                 * SafetyMap.kMaxSpeedChange)
-                                                .withVelocityY(driverController.getLeftX() * SafetyMap.kMaxSpeed
+                                                .withVelocityY(-driverController.getLeftX() * SafetyMap.kMaxSpeed
                                                                 * SafetyMap.kMaxSpeedChange)
                                                 .withRotationalRate(-driverController.getRightX()
                                                                 * SafetyMap.kMaxAngularRate

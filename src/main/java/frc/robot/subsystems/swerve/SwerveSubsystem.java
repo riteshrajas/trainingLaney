@@ -76,7 +76,8 @@ public class SwerveSubsystem extends SubsystemABS {
                 .withProperties(Map.of("min", 0, "max", 100))
                 .withSize(6, 2);
         tab.add("Rotation PID", rPidController);
-
+        tab.addNumber("Band/Robot X", ()-> drivetrain.getState().Pose.getX());
+        tab.addNumber("Band/Robot Y", ()-> drivetrain.getState().Pose.getY());
     }
 
     @Override
