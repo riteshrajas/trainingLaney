@@ -1,7 +1,5 @@
 package frc.robot.commands.vision;
 
-import com.ctre.phoenix6.hardware.CANrange;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +13,6 @@ public class RetrieveClosestGamePiece extends Command {
     private static final double MAX_SPEED = 0.5; // Maximum approach speed
     private static final double MIN_DISTANCE = 0.1; // Minimum distance threshold
     private static final double MAX_DISTANCE = 5.0; // Maximum tracking distance
-    private CANrange range = new CANrange(55);
     public RetrieveClosestGamePiece(SwerveSubsystem swerveSubsystem, VisionObject visionTarget) {
         this.swerveSubsystem = swerveSubsystem;
         this.visionTarget = visionTarget;
@@ -29,7 +26,6 @@ public class RetrieveClosestGamePiece extends Command {
 
     @Override
     public void execute() {
-        System.out.println(range.getDistance());
         if (!visionTarget.isPresent()) {
             swerveSubsystem.driveRobotRelative(0, 0, 0);
             return;
