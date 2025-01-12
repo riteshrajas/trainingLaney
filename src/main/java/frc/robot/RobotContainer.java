@@ -29,6 +29,7 @@ import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
+import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
@@ -51,12 +52,14 @@ public class RobotContainer extends RobotFramework {
     private SendableChooser<Command> autonChooser;
     private Camera frontCamera;
     private Camera rearCamera;
+    private PathConstraints autoAlignConstraints;
 
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
         operatorController = UsbMap.operatorController;
+        autoAlignConstraints = AutonConstraints.kPathConstraints;
 
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
@@ -100,6 +103,9 @@ public class RobotContainer extends RobotFramework {
         setupNamedCommands();
         setupPaths();
         configureBindings();
+ 
+
+        
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
@@ -110,22 +116,21 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
-
-        try{
-
+        try {
             driverController.b()
-                .onTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("New New Path"), 
-                new PathConstraints(3.0, 4.0,Units.degreesToRadians(0), Units.degreesToRadians(360) 
-        )));
+                    .onTrue(AutoBuilder.pathfindThenFollowPath(
+                        PathPlannerPath.fromPathFile("Pathto1"), autoAlignConstraints));
         } catch (FileVersionException | IOException | ParseException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+                
+
+       
     }
 
     private void setupNamedCommands() {
-        NamedCommands.registerCommand(
-                "Field Relative",
-                DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
+        NamedCommands.registerCommand("Field Relative",DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
     }
 
     public void setupPaths() {

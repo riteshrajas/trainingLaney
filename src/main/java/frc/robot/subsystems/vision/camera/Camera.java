@@ -10,7 +10,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class Camera extends VisionABC {
 	private ObjectType object;
-	private int lastseenAprilTag;
+	public int lastseenAprilTag;
 	
 	public Camera(Subsystems vision, String networkTable, ObjectType objectType) {
 		super(vision, networkTable);
@@ -108,6 +108,10 @@ public class Camera extends VisionABC {
 	@Override 
 	public String getName() {
 		return  object.getTable();
+	}
+
+	public int getLastseenAprilTag() {
+		return lastseenAprilTag;
 	}
 	
 
