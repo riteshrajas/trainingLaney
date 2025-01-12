@@ -53,7 +53,7 @@ public class DriveT extends Command {
   @Override
   public void execute() {
     try {
-      String pathFile = left ? paths[tag].leftpath : paths[tag].rightpath;
+      String pathFile = left ? paths[tag].getLeftPath() : paths[tag].getRightPath();
       AutoBuilder.pathfindThenFollowPath(
         PathPlannerPath.fromPathFile(pathFile), AutonConstraints.kPathConstraints);
     } catch (FileVersionException | IOException | ParseException e) {

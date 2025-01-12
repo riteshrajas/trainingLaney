@@ -11,4 +11,13 @@ public class PathPair {
         this.redAlliance = redAlliance;
         this.blueAlliance = blueAlliance;
     }
+    
+    public String getLeftPath() {
+        return leftpath;
+    }
+
+    public String getRightPath() {
+        return rightpath;
+    }
+
 }
