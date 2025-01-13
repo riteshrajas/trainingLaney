@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.swerve.DriveForwardCommand;
+import frc.robot.commands.swerve.DriveHere;
+import frc.robot.commands.swerve.DriveT;
 import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
@@ -124,9 +126,10 @@ public class RobotContainer extends RobotFramework {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-                
 
-       
+        driverController.leftBumper()
+                .onTrue(new DriveHere(swerveSubsystem)); // Ensure swerveSubsystem is passed
+
     }
 
     private void setupNamedCommands() {

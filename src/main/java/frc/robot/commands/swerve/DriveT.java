@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -23,7 +24,6 @@ public class DriveT extends Command {
   private final SwerveSubsystem swerve;
   private final Camera tagCamera;
   private int tag;
-  private final PathPair[] paths;
   private final boolean left;
 
   private static final PathPair[] PATHS = {
@@ -40,22 +40,45 @@ public class DriveT extends Command {
     this.swerve = swerve;
     this.tagCamera = tagCamera;
     this.left = left;
-    this.paths = PATHS;
+    System.out.println("DriveT command created with left: " + left);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tag = tagCamera.getLastseenAprilTag();
+    // tag = tagCamera.getLastseenAprilTag();
+    tag = 0;
+    System.out.println("DriveT command initialized with tag: " + tag);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     try {
-      String pathFile = left ? paths[tag].getLeftPath() : paths[tag].getRightPath();
-      AutoBuilder.pathfindThenFollowPath(
-        PathPlannerPath.fromPathFile(pathFile), AutonConstraints.kPathConstraints);
+      if (tag == -1) {
+        return;
+      }
+      System.out.println("Tag value: " + tag);
+      for (PathPair path : PATHS) {
+        boolean pathFound = path.tagToPath(tag);
+        System.out.println("Path found for tag " + tag + ": " + pathFound);
+        System.out.println("Left path: " + path.getLeftPath());
+        System.out.println("Right path: " + path.getRightPath());
+        if (pathFound) {
+          String selectedPath = left ? path.getLeftPath() : path.getRightPath();
+          if (selectedPath != null) {
+            System.out.println("Loading path: " + selectedPath);
+            PathPlannerPath pathPlannerPath = PathPlannerPath.fromPathFile(selectedPath);
+            if (pathPlannerPath != null) {
+              SmartDashboard.putString("Path", selectedPath);
+              AutoBuilder.pathfindThenFollowPath(pathPlannerPath, AutonConstraints.kPathConstraints);
+              System.out.println("Following path: " + selectedPath);
+            } else {
+              System.out.println("Failed to load path: " + selectedPath);
+            }
+          }
+          return;
+        }
+      }
     } catch (FileVersionException | IOException | ParseException e) {
       e.printStackTrace();
     }
