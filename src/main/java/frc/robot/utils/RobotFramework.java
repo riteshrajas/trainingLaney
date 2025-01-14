@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-@SuppressWarnings("unused")
 /**
  * Class for configuring robot drive modes.
  */

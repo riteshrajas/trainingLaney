@@ -1,7 +1,5 @@
 package frc.robot.utils;
 
-import com.google.flatbuffers.Table;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 

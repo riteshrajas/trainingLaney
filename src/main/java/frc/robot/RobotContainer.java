@@ -1,6 +1,5 @@
 package frc.robot;
 
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -25,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.swerve.DriveForwardCommand;
-import frc.robot.commands.swerve.DriveHere;
 import frc.robot.commands.swerve.DriveT;
+import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
@@ -35,6 +34,7 @@ import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
+import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.DrivetrainConstants;
 import frc.robot.utils.ObjectType;
 import frc.robot.utils.RobotFramework;
@@ -56,7 +56,6 @@ public class RobotContainer extends RobotFramework {
     private Camera rearCamera;
     private PathConstraints autoAlignConstraints;
 
-
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
@@ -67,21 +66,17 @@ public class RobotContainer extends RobotFramework {
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
                 SensorMap.GYRO_PORT,
-                driverController
-        );
+                driverController);
 
         frontCamera = new Camera(
                 Subsystems.VISION,
                 Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_FRONT
-        );
+                ObjectType.APRIL_TAG_FRONT);
 
         rearCamera = new Camera(
                 Subsystems.VISION,
                 Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_BACK
-        );
-
+                ObjectType.APRIL_TAG_BACK);
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -100,14 +95,11 @@ public class RobotContainer extends RobotFramework {
                 }
             }
         });
-    
 
         setupNamedCommands();
         setupPaths();
         configureBindings();
- 
 
-        
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
@@ -118,22 +110,20 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
-        try {
-            driverController.b()
-                    .onTrue(AutoBuilder.pathfindThenFollowPath(
-                        PathPlannerPath.fromPathFile("Pathto1"), autoAlignConstraints));
-        } catch (FileVersionException | IOException | ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        driverController.b()
+                .onTrue(AutoPathFinder.GotoPath("Pathto1"));
 
         driverController.leftBumper()
-                .onTrue(new DriveHere(swerveSubsystem)); // Ensure swerveSubsystem is passed
+                .onTrue(GameNavigator.GoLeft(frontCamera.getLastseenAprilTag()));
+
+        driverController.rightBumper()
+                .onTrue(GameNavigator.GoRight(frontCamera.getLastseenAprilTag()));
 
     }
 
     private void setupNamedCommands() {
-        NamedCommands.registerCommand("Field Relative",DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
+        NamedCommands.registerCommand("Field Relative",
+                DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
     }
 
     public void setupPaths() {
@@ -184,8 +174,7 @@ public class RobotContainer extends RobotFramework {
         return teleOpChooser.getSelected();
     }
 
-    public Command TestSystems() {
-        // TODO Auto-generated method stub
+    public Command TestSystems() {       
         throw new UnsupportedOperationException("Unimplemented method 'TestSystems'");
     }
 

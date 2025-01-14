@@ -4,7 +4,6 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.utils.ObjectType;
 
 public class RobotMap {
 

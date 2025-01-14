@@ -21,8 +21,6 @@ import frc.robot.utils.PathPair;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveT extends Command {
-  private final SwerveSubsystem swerve;
-  private final Camera tagCamera;
   private int tag;
   private final boolean left;
 
@@ -37,8 +35,6 @@ public class DriveT extends Command {
 
   /** Creates a new DriveT. */
   public DriveT(SwerveSubsystem swerve, Camera tagCamera, boolean left) {
-    this.swerve = swerve;
-    this.tagCamera = tagCamera;
     this.left = left;
     System.out.println("DriveT command created with left: " + left);
   }
