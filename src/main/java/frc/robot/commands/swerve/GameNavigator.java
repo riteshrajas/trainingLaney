@@ -43,8 +43,6 @@ public class GameNavigator extends AutoPathFinder {
   public static Command GoRight(int TagID) {
     if (TagID == -1) {
       return new ParallelCommandGroup();
-      //return null;
-      /* returning null causes an error, */
     }
 
     for (PathPair path : PATHS) {
