@@ -21,7 +21,7 @@ public final class DrivetrainConstants {
      */
     public static final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(SafetyMap.kMaxSpeed * 0.1)
-            .withRotationalDeadband(SafetyMap.kMaxAngularRate * 0.1)
+            .withRotationalDeadband(SafetyMap.kMaxAngularRate * 0.4)
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
     /**

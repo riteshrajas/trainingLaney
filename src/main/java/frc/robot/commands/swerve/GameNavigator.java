@@ -4,6 +4,8 @@
 
 package frc.robot.commands.swerve;
 
+import com.pathplanner.lib.events.CancelCommandEvent;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.utils.AutoPathFinder;
@@ -21,7 +23,9 @@ public class GameNavigator extends AutoPathFinder {
 
   public static Command GoLeft(int TagID) {
     if (TagID == -1) {
-      return null;
+      return new ParallelCommandGroup();
+      //return null;
+      /* returning null causes an error, */
     }
 
     for (PathPair path : PATHS) {
@@ -31,12 +35,16 @@ public class GameNavigator extends AutoPathFinder {
       }
 
     }
-    return null;
+    return new ParallelCommandGroup();
+    //return null;
+    /* returning null causes an error, */
   }
 
   public static Command GoRight(int TagID) {
     if (TagID == -1) {
-      return null;
+      return new ParallelCommandGroup();
+      //return null;
+      /* returning null causes an error, */
     }
 
     for (PathPair path : PATHS) {
@@ -46,6 +54,8 @@ public class GameNavigator extends AutoPathFinder {
       }
 
     }
-    return null;
+    return new ParallelCommandGroup();
+    //return null;
+    /* returning null causes an error, */
   }
 }
