@@ -6,16 +6,19 @@ import frc.robot.utils.ObjectType;
 import frc.robot.utils.Subsystems;
 import frc.robot.utils.VisionABC;
 import frc.robot.utils.VisionObject;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class Camera extends VisionABC {
 	private ObjectType object;
 	public int lastseenAprilTag;
+	public GenericEntry lastseentag_sim;
 	
 	public Camera(Subsystems vision, String networkTable, ObjectType objectType) {
 		super(vision, networkTable);
 		lastseenAprilTag = -1;
 		object = objectType;
+		lastseentag_sim =  tab.add("AprilTag"+ objectType.getName(), -1).getEntry();
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class Camera extends VisionABC {
 
 	@Override
 	public void simulationPeriodic() {
-		// Implementation needed
+		lastseenAprilTag = (int)  lastseentag_sim.getDouble(-1);
 	}
 
 	@Override
@@ -79,13 +82,11 @@ public class Camera extends VisionABC {
 
 	@Override
 	public boolean isHealthy() {
-		// Implementation needed
 		return true;
 	}
 
 	@Override
 	public void Failsafe() {
-		// Implementation needed
 	}
 
 	/**
