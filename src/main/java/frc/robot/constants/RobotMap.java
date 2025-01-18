@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotMap {
 
     public static class SafetyMap {
-        public static final double kMaxSpeed = 7.0;
+        public static final double kMaxSpeed = 6.0;
         public static final double kMaxRotation = 1.0;
         public static final double kMaxAcceleration = 1.0;
         public static final double kMaxAngularAcceleration = 1.0;
         public static final double kMaxAngularRate = Math.PI; // 3/4 of a rotation per second max angular velocity
-	    public static final double kAngularRateMultiplier = 4;
+	    public static final double kAngularRateMultiplier = 1;
         public static final double kJoystickDeadband = 0.1;
         public static double kMaxSpeedChange = 1;
         public static double kFollowerCommand = 6;
