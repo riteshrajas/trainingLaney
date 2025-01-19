@@ -14,7 +14,6 @@ import java.util.Map;
 public class SafetyManager extends SubsystemBase {
     private static ShuffleboardTab safetyTab;
     private static Map<SubsystemABS, SimpleWidget> subsystemWidgets = new HashMap<>();
-
     /**
      * Constructor for SafetyManager.
      * 

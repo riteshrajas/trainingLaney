@@ -1,21 +1,30 @@
 package frc.robot.constants;
 
+import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotMap {
 
     public static class SafetyMap {
-        public static final double kMaxSpeed = 7.0;
+        public static final double kMaxSpeed = 6.0;
         public static final double kMaxRotation = 1.0;
         public static final double kMaxAcceleration = 1.0;
-        public static final double kAutonMoveSpeed = 1.0;
         public static final double kMaxAngularAcceleration = 1.0;
         public static final double kMaxAngularRate = Math.PI; // 3/4 of a rotation per second max angular velocity
-	    public static final double kAngularRateMultiplier = 4;
+	    public static final double kAngularRateMultiplier = 1;
         public static final double kJoystickDeadband = 0.1;
         public static double kMaxSpeedChange = 1;
         public static double kFollowerCommand = 6;
 
+        public static class AutonConstraints {
+            public static final double kMaxSpeed = 1.0;
+            public static final double kMaxAcceleration = 4.0;
+            public static final double kMaxAngularRate = Units.degreesToRadians(0);
+            public static final double kMaxAngularAcceleration = Units.degreesToRadians(360);
+            public static final PathConstraints kPathConstraints = new PathConstraints(kMaxSpeed, kMaxAcceleration, kMaxAngularRate, kMaxAngularAcceleration);
+        }
         public static class SwerveConstants {
             public static double kRotationP = 0.007;
             public static double kRotationI = .000;//.0001
@@ -81,6 +90,7 @@ public class RobotMap {
                 public static final double TARGET_HEIGHT = 0.0;
                 public static final double HORIZONTAL_FOV = 59.6;
                 public static final double VERTICAL_FOV = 45.7;
+
             }
         
             public static class FrontCam {

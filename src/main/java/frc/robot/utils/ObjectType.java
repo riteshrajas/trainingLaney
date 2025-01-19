@@ -1,12 +1,19 @@
 package frc.robot.utils;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * Enum representing different object types for vision processing.
  */
 public enum ObjectType {
-    APRIL_TAG("April Tag", "This object type is for AprilTags", "limelight-notes", 480, 640, 0.0, 59.6, 45.7),
-    INFINITE_CHARGE_BALLS("Infinite Charge Balls", "This object type is for Infinite Charge Balls", "limelight-notes", 480, 640, 0.0, 59.6, 45.7),
-    NOTE("Note", "This object type is for Notes", "limelight-notes", 480, 640, 0.0, 59.6, 45.7);
+    APRIL_TAG_FRONT("April Tag Front", "This object type is for AprilTags", "limelight-front", 480, 640, 0.0, 59.6, 45.7),
+    APRIL_TAG_BACK("April Tag Back", "This object type is for AprilTags", "limelight-back", 480, 640, 0.0, 59.6, 45.7),
+    APRIL_TAG_LEFT("April Tag Left", "This object type is for AprilTags", "limelight-left", 480, 640, 0.0, 59.6, 45.7);
+
+
+    // INFINITE_CHARGE_BALLS("Infinite Charge Balls", "This object type is for Infinite Charge Balls", "limelight-notes", 480, 640, 0.0, 59.6, 45.7),
+    // NOTE("Note", "This object type is for Notes", "limelight-notes", 480, 640, 0.0, 59.6, 45.7);
 
     private final String name;
     private final String description;
@@ -16,6 +23,7 @@ public enum ObjectType {
     private final double targetHeight;
     private final double horizontalFov;
     private final double verticalFov;
+    private final NetworkTableInstance tableInstance;
 
     ObjectType(String name, String description, String table, int cameraHeight, int cameraWidth, double targetHeight, double horizontalFov, double verticalFov) {
         this.name = name;
@@ -26,6 +34,7 @@ public enum ObjectType {
         this.targetHeight = targetHeight;
         this.horizontalFov = horizontalFov;
         this.verticalFov = verticalFov;
+        this.tableInstance = NetworkTableInstance.getDefault();
     }
 
     /**
@@ -105,8 +114,8 @@ public enum ObjectType {
      * 
      * @return the network table name.
      */
-    public String getNetworkTable() {
-        return table;
+    public NetworkTable getNetworkTable() {
+        return tableInstance.getTable(table);
     }
 
     /**
@@ -117,13 +126,13 @@ public enum ObjectType {
      */
     public static ObjectType getInstance(ObjectType type) {
         switch (type) {
-            case APRIL_TAG:
-                return APRIL_TAG;
-            case INFINITE_CHARGE_BALLS:
-                return INFINITE_CHARGE_BALLS;
-            case NOTE:
-                return NOTE;
-            // Add other object types as needed
+            case APRIL_TAG_FRONT:
+                return APRIL_TAG_FRONT;
+            case APRIL_TAG_BACK:
+                return APRIL_TAG_BACK;
+            case APRIL_TAG_LEFT:
+                return APRIL_TAG_LEFT;
+
             default:
                 return null;
         }

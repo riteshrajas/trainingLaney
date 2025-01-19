@@ -32,7 +32,7 @@ public abstract class VisionABC extends SubsystemABS {
   /**
    * Constructor for VisionABC.
    */
-  public VisionABC() {
+  public VisionABC(Subsystems part, String tabName) {
     super(Subsystems.VISION, "Vision");
     tab = getTab();
   }

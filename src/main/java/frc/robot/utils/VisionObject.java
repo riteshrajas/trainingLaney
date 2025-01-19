@@ -2,7 +2,6 @@ package frc.robot.utils;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.constants.RobotMap.VisionMap;
 
 public class VisionObject {
@@ -17,7 +16,7 @@ public class VisionObject {
     private NetworkTableEntry tvEntry;
 
     public VisionObject(double x, double y, double area, ObjectType type) {
-        table = NetworkTableInstance.getDefault().getTable(type.getTable());
+        table = type.getNetworkTable();
         this.x = x;
         this.y = y;
         this.area = area;
@@ -78,7 +77,7 @@ public class VisionObject {
 
     public void setType(ObjectType type) {
         this.type = type;
-        table = NetworkTableInstance.getDefault().getTable(type.getTable());
+        table = type.getNetworkTable();
         initializeEntries();
     }
 

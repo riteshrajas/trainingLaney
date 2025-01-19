@@ -1,6 +1,5 @@
 package frc.robot;
 
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -25,14 +24,18 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.swerve.DriveForwardCommand;
+import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
 import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
+import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
+import frc.robot.subsystems.vision.camera.Camera;
+import frc.robot.utils.AutoPathFinder;
 import frc.robot.utils.DrivetrainConstants;
+import frc.robot.utils.ObjectType;
 import frc.robot.utils.RobotFramework;
 import frc.robot.utils.SubsystemABS;
 import frc.robot.utils.Subsystems;
@@ -48,17 +51,31 @@ public class RobotContainer extends RobotFramework {
     private Telemetry telemetry;
     private SendableChooser<Command> teleOpChooser;
     private SendableChooser<Command> autonChooser;
+    private Camera frontCamera;
+    private Camera rearCamera;
+    private PathConstraints autoAlignConstraints;
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
         driverController = UsbMap.driverController;
         operatorController = UsbMap.operatorController;
+        autoAlignConstraints = AutonConstraints.kPathConstraints;
 
         swerveSubsystem = new SwerveSubsystem(
                 Subsystems.SWERVE_DRIVE,
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
                 SensorMap.GYRO_PORT,
                 driverController);
+
+        frontCamera = new Camera(
+                Subsystems.VISION,
+                Subsystems.VISION.getNetworkTable(),
+                ObjectType.APRIL_TAG_FRONT);
+
+        rearCamera = new Camera(
+                Subsystems.VISION,
+                Subsystems.VISION.getNetworkTable(),
+                ObjectType.APRIL_TAG_BACK);
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -77,11 +94,11 @@ public class RobotContainer extends RobotFramework {
                 }
             }
         });
-    
 
         setupNamedCommands();
         setupPaths();
         configureBindings();
+
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
 
@@ -92,21 +109,19 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
+        driverController.b()
+                .onTrue(AutoPathFinder.GotoPath("Pathto1"));
 
-        try{
+        driverController.leftBumper()
+                .onTrue(GameNavigator.GoLeft(frontCamera.getLastseenAprilTag()));
 
-            driverController.b()
-                .onTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("New New Path"), 
-                new PathConstraints(3.0, 4.0,Units.degreesToRadians(0), Units.degreesToRadians(360) 
-        )));
-        } catch (FileVersionException | IOException | ParseException e) {
-            e.printStackTrace();
-        }
+        driverController.rightBumper()
+                .onTrue(GameNavigator.GoRight(frontCamera.getLastseenAprilTag()));
+
     }
 
     private void setupNamedCommands() {
-        NamedCommands.registerCommand(
-                "Field Relative",
+        NamedCommands.registerCommand("Field Relative",
                 DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
     }
 
@@ -133,6 +148,9 @@ public class RobotContainer extends RobotFramework {
     public SubsystemABS[] SafeGuardSystems() {
         return new SubsystemABS[] {
                 swerveSubsystem,
+                frontCamera,
+                rearCamera
+
         };
     }
 
@@ -155,9 +173,8 @@ public class RobotContainer extends RobotFramework {
         return teleOpChooser.getSelected();
     }
 
-    public Command TestSystems() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'TestSystems'");
+    public Command TestSystems() {       
+        return null;
     }
 
 }
