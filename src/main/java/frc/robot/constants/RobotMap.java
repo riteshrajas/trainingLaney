@@ -19,7 +19,7 @@ public class RobotMap {
         public static double kFollowerCommand = 6;
 
         public static class AutonConstraints {
-            public static final double kMaxSpeed = 3.0;
+            public static final double kMaxSpeed = 1.0;
             public static final double kMaxAcceleration = 4.0;
             public static final double kMaxAngularRate = Units.degreesToRadians(0);
             public static final double kMaxAngularAcceleration = Units.degreesToRadians(360);
