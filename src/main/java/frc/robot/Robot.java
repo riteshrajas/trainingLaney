@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -34,7 +33,6 @@ import frc.robot.utils.SystemCheckUp;
 public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
-    private CANrange range;
     private RobotContainer robotContainer;
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -43,13 +41,12 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
-       
+
         Pathfinding.setPathfinder(new LocalADStarAK());
         SignalLogger.setPath("/media/sda1/CTRElogs/");
         
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         robotContainer = new RobotContainer();
-        range = new CANrange(55);
         new SafetyManager(robotContainer.SafeGuardSystems());
         ComandCenter.init();
        
@@ -131,11 +128,6 @@ public class Robot extends TimedRobot
     /** This method is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        var rangeDistance = range.getDistance();
-        
-        SmartDashboard.putNumber("Distance",rangeDistance.getValue().magnitude());
-
-        SmartDashboard.putString("Distance Unit",rangeDistance.getValue().unit().toString());
     }
     
     
