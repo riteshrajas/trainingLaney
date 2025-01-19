@@ -174,7 +174,7 @@ public class RobotContainer extends RobotFramework {
     }
 
     public Command TestSystems() {       
-        throw new UnsupportedOperationException("Unimplemented method 'TestSystems'");
+        return null;
     }
 
 }
