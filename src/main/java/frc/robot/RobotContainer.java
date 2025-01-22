@@ -101,6 +101,7 @@ public class RobotContainer extends RobotFramework {
 
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
+        
 
     }
 
