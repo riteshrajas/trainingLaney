@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
@@ -41,15 +43,16 @@ public class Robot extends TimedRobot
     {
 
         Pathfinding.setPathfinder(new LocalADStarAK());
-        // Add PathPlanner warm-up before other initialization
+        SignalLogger.setPath("/media/sda1/CTRElogs/");
         
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         robotContainer = new RobotContainer();
         new SafetyManager(robotContainer.SafeGuardSystems());
         ComandCenter.init();
-
+       
 
         // Start logging data log
+        SignalLogger.start();
         DataLogManager.start();
 
         // Record both DS control and joystick data

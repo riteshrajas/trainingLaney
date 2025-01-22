@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.45,
-        "y": 6.9
+        "x": 1.2772500000000002,
+        "y": 7.184
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.45,
-        "y": 6.9
+        "x": 2.2772500000000004,
+        "y": 7.184
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "coralStationCenter"
     },
     {
       "anchor": {
-        "x": 3.69,
-        "y": 5.1
+        "x": 3.7342500000000003,
+        "y": 5.039
       },
       "prevControl": {
-        "x": 3.210491803278688,
-        "y": 5.603483606557377
+        "x": 3.2547418032786886,
+        "y": 5.5424836065573775
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "6/6 Right"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6948897795591201,
+      "minWaypointRelativePos": 0.9,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -47,7 +47,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -59,7 +59,7 @@
     "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "cool",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": -55.0
