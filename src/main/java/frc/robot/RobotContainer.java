@@ -101,6 +101,7 @@ public class RobotContainer extends RobotFramework {
 
         telemetry = new Telemetry(SafetyMap.kMaxSpeed);
         DrivetrainConstants.drivetrain.registerTelemetry(telemetry::telemeterize);
+        
 
     }
 
@@ -112,11 +113,14 @@ public class RobotContainer extends RobotFramework {
         driverController.b()
                 .onTrue(AutoPathFinder.GotoPath("Pathto1"));
 
-        driverController.leftBumper()
-                .onTrue(GameNavigator.GoLeft(frontCamera.getLastseenAprilTag()));
+        driverController.y()
+                .onTrue(AutoPathFinder.GotoPath("lineToRight"));
 
-        driverController.rightBumper()
-                .onTrue(GameNavigator.GoRight(frontCamera.getLastseenAprilTag()));
+        // driverController.leftBumper()
+        //         .onTrue(GameNavigator.GoLeft(frontCamera.getLastseenAprilTag()));
+
+        // driverController.rightBumper()
+        //         .onTrue(GameNavigator.GoRight(frontCamera.getLastseenAprilTag()));
 
     }
 
