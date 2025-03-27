@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.raisearm;
 import frc.robot.commands.swerve.DriveForwardCommand;
 import frc.robot.commands.swerve.GameNavigator;
 import frc.robot.constants.*;
@@ -30,6 +31,7 @@ import frc.robot.constants.RobotMap.SafetyMap;
 import frc.robot.constants.RobotMap.SensorMap;
 import frc.robot.constants.RobotMap.UsbMap;
 import frc.robot.constants.RobotMap.SafetyMap.AutonConstraints;
+import frc.robot.subsystems.elevator.elevator;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.camera.Camera;
@@ -54,6 +56,7 @@ public class RobotContainer extends RobotFramework {
     private Camera frontCamera;
     private Camera rearCamera;
     private PathConstraints autoAlignConstraints;
+    private elevator sdghjm;
 
     public RobotContainer() {
         double swerveSpeedMultiplier = 0.4;
@@ -66,16 +69,18 @@ public class RobotContainer extends RobotFramework {
                 Subsystems.SWERVE_DRIVE.getNetworkTable(),
                 SensorMap.GYRO_PORT,
                 driverController);
+        
+                sdghjm = new elevator();
 
-        frontCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_FRONT);
+        // frontCamera = new Camera(
+        //         Subsystems.VISION,
+        //         Subsystems.VISION.getNetworkTable(),
+        //         ObjectType.APRIL_TAG_FRONT);
 
-        rearCamera = new Camera(
-                Subsystems.VISION,
-                Subsystems.VISION.getNetworkTable(),
-                ObjectType.APRIL_TAG_BACK);
+        // rearCamera = new Camera(
+        //         Subsystems.VISION,
+        //         Subsystems.VISION.getNetworkTable(),
+        //         ObjectType.APRIL_TAG_BACK);
 
         teleOpChooser = new SendableChooser<>();
         setupDrivetrain();
@@ -110,11 +115,9 @@ public class RobotContainer extends RobotFramework {
                 .onTrue(DrivetrainConstants.drivetrain
                         .runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
 
-        driverController.b()
-                .onTrue(AutoPathFinder.GotoPath("Pathto1"));
+        driverController.a().onTrue(new raisearm(sdghjm, 180));
 
-        driverController.y()
-                .onTrue(AutoPathFinder.GotoPath("lineToRight"));
+        
 
         // driverController.leftBumper()
         //         .onTrue(GameNavigator.GoLeft(frontCamera.getLastseenAprilTag()));
@@ -127,6 +130,7 @@ public class RobotContainer extends RobotFramework {
     private void setupNamedCommands() {
         NamedCommands.registerCommand("Field Relative",
                 DrivetrainConstants.drivetrain.runOnce(() -> DrivetrainConstants.drivetrain.seedFieldCentric()));
+        
     }
 
     public void setupPaths() {
@@ -152,8 +156,6 @@ public class RobotContainer extends RobotFramework {
     public SubsystemABS[] SafeGuardSystems() {
         return new SubsystemABS[] {
                 swerveSubsystem,
-                frontCamera,
-                rearCamera
 
         };
     }
