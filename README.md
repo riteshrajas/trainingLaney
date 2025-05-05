@@ -44,4 +44,4 @@ We're thrilled to share our comprehensive template for the 2025 FRC season! This
 - Elastic Dashboard
 - Pathplanner 2025 beta-3++
 
-We hope this template helps teams jumpstart their 2025 season development. Feel free to contribute or raise issues if you find areas for improvement!
+We hope this template helps teams jumpstart their 2025 season development. Feel free to contribute or raise issues if you find areas for improvement!!!
